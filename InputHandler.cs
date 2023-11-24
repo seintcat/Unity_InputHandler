@@ -17,9 +17,9 @@ public class InputHandler : MonoBehaviour
     private string defaultActionMap;
 
     private static Dictionary<string, bool> buttons = new Dictionary<string, bool>();
-    public static Dictionary<string, Action> holdAbleOnEvent = new Dictionary<string, Action>();
-    public static Dictionary<string, Action> holdAbleOffEvent = new Dictionary<string, Action>();
-    public static Dictionary<string, Action> clickEvent = new Dictionary<string, Action>();
+    public static Dictionary<string, List<Action>> holdAbleOnEvent = new Dictionary<string, List<Action>>();
+    public static Dictionary<string, List<Action>> holdAbleOffEvent = new Dictionary<string, List<Action>>();
+    public static Dictionary<string, List<Action>> clickEvent = new Dictionary<string, List<Action>>();
 
     private void Awake()
     {
@@ -67,15 +67,18 @@ public class InputHandler : MonoBehaviour
         buttons[button] = context.ReadValue<float>() > 0.5f;
 
         if (buttons[button] && holdAbleOnEvent.ContainsKey(button))
-            holdAbleOnEvent[button].Invoke();
+            foreach (Action action in holdAbleOnEvent[button])
+                action.Invoke();
         else if (!buttons[button] && holdAbleOffEvent.ContainsKey(button))
-            holdAbleOffEvent[button].Invoke();
+            foreach (Action action in holdAbleOffEvent[button])
+                action.Invoke();
     }
     public void ClickButton(string button, InputAction.CallbackContext context)
     {
         buttons[button] = context.ReadValue<float>() > 0.5f;
 
         if (buttons[button] && clickEvent.ContainsKey(button))
-            clickEvent[button].Invoke();
+            foreach (Action action in clickEvent[button])
+                action.Invoke();
     }
 }
