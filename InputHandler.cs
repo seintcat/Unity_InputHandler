@@ -13,6 +13,8 @@ public class InputHandler : MonoBehaviour
     private List<string> holdAbleActionNames;
     [SerializeField]
     private List<string> clickActionNames;
+    [SerializeField]
+    private string defaultActionMap;
 
     private static Dictionary<string, bool> buttons = new Dictionary<string, bool>();
     public static Dictionary<string, Action> holdAbleOnEvent = new Dictionary<string, Action>();
@@ -22,7 +24,7 @@ public class InputHandler : MonoBehaviour
     private void Awake()
     {
         actionAsset.Enable();
-        InputActionMap map = actionAsset.FindActionMap("Battle");
+        InputActionMap map = actionAsset.FindActionMap(defaultActionMap);
         map.Enable();
 
         foreach (string button in holdAbleActionNames)
@@ -55,7 +57,7 @@ public class InputHandler : MonoBehaviour
 
     private void LateUpdate()
     {
-        foreach(string button in clickActionNames)
+        foreach (string button in clickActionNames)
             if (buttons.ContainsKey(button))
                 buttons[button] = false;
     }
