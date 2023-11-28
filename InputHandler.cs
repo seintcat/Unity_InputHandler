@@ -34,15 +34,6 @@ public class InputHandler : MonoBehaviour
             map.FindAction(button).canceled += (x) => HoldAbleButton(button, x);
         }
 
-        foreach (string button in clickActionNames)
-        {
-            if(!buttons.ContainsKey(button))
-                buttons.Add(button, false);
-
-            map.FindAction(button).performed += (x) => HoldAbleButton(button, x);
-            //map.FindAction(button).canceled += (x) => ClickButton(button, x);
-        }
-
         holdAbleOnEvent.Clear();
         holdAbleOffEvent.Clear();
         clickEvent.Clear();
