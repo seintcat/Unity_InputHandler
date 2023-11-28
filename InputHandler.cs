@@ -12,14 +12,12 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     private List<string> holdAbleActionNames;
     [SerializeField]
-    private List<string> clickActionNames;
-    [SerializeField]
     private string defaultActionMap;
 
     private static Dictionary<string, bool> buttons = new Dictionary<string, bool>();
     public static Dictionary<string, List<Action>> holdAbleOnEvent = new Dictionary<string, List<Action>>();
     public static Dictionary<string, List<Action>> holdAbleOffEvent = new Dictionary<string, List<Action>>();
-    public static Dictionary<string, List<Action>> clickEvent = new Dictionary<string, List<Action>>();
+    public static Dictionary<string, List<Action>> buttonDownEvent = new Dictionary<string, List<Action>>();
 
     private void Awake()
     {
@@ -36,7 +34,7 @@ public class InputHandler : MonoBehaviour
 
         holdAbleOnEvent.Clear();
         holdAbleOffEvent.Clear();
-        clickEvent.Clear();
+        buttonDownEvent.Clear();
     }
 
     // Start is called before the first frame update
@@ -53,9 +51,7 @@ public class InputHandler : MonoBehaviour
 
     private void LateUpdate()
     {
-        foreach(string button in clickActionNames)
-            if (buttons.ContainsKey(button))
-                buttons[button] = false;
+
     }
 
     public void HoldAbleButton(string button, InputAction.CallbackContext context)
@@ -68,8 +64,8 @@ public class InputHandler : MonoBehaviour
                 foreach (Action action in holdAbleOnEvent[button])
                     action.Invoke();
 
-            if (clickEvent.ContainsKey(button))
-                foreach (Action action in clickEvent[button])
+            if (buttonDownEvent.ContainsKey(button))
+                foreach (Action action in buttonDownEvent[button])
                 action.Invoke();
         }
         else if (!buttons[button] && holdAbleOffEvent.ContainsKey(button))
