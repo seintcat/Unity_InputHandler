@@ -38,8 +38,12 @@ public class InputHandler : MonoBehaviour
         {
             buttons.Add(button, false);
             map.FindAction(button).performed += (x) => ClickButton(button, x);
-            map.FindAction(button).canceled += (x) => ClickButton(button, x);
+            // map.FindAction(button).canceled += (x) => ClickButton(button, x);
         }
+
+        holdAbleOnEvent.Clear();
+        holdAbleOffEvent.Clear();
+        clickEvent.Clear();
     }
 
 
