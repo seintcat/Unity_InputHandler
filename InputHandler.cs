@@ -36,16 +36,17 @@ public class InputHandler : MonoBehaviour
 
         foreach (string button in clickActionNames)
         {
-            buttons.Add(button, false);
-            map.FindAction(button).performed += (x) => ClickButton(button, x);
-            // map.FindAction(button).canceled += (x) => ClickButton(button, x);
+            if(!buttons.ContainsKey(button))
+                buttons.Add(button, false);
+
+            map.FindAction(button).performed += (x) => HoldAbleButton(button, x);
+            //map.FindAction(button).canceled += (x) => ClickButton(button, x);
         }
 
         holdAbleOnEvent.Clear();
         holdAbleOffEvent.Clear();
         clickEvent.Clear();
     }
-
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +62,7 @@ public class InputHandler : MonoBehaviour
 
     private void LateUpdate()
     {
-        foreach (string button in clickActionNames)
+        foreach(string button in clickActionNames)
             if (buttons.ContainsKey(button))
                 buttons[button] = false;
     }
@@ -70,19 +71,18 @@ public class InputHandler : MonoBehaviour
     {
         buttons[button] = context.ReadValue<float>() > 0.5f;
 
-        if (buttons[button] && holdAbleOnEvent.ContainsKey(button))
-            foreach (Action action in holdAbleOnEvent[button])
+        if (buttons[button])
+        {
+            if(holdAbleOnEvent.ContainsKey(button))
+                foreach (Action action in holdAbleOnEvent[button])
+                    action.Invoke();
+
+            if (clickEvent.ContainsKey(button))
+                foreach (Action action in clickEvent[button])
                 action.Invoke();
+        }
         else if (!buttons[button] && holdAbleOffEvent.ContainsKey(button))
             foreach (Action action in holdAbleOffEvent[button])
-                action.Invoke();
-    }
-    public void ClickButton(string button, InputAction.CallbackContext context)
-    {
-        buttons[button] = context.ReadValue<float>() > 0.5f;
-
-        if (buttons[button] && clickEvent.ContainsKey(button))
-            foreach (Action action in clickEvent[button])
                 action.Invoke();
     }
 }
